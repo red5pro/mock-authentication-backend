@@ -1,4 +1,4 @@
-# mock-authenticaion-backend
+# mock-authentication-backend
 
 This NodeJS Mock Authentication Service is for use in testing Red5 Pro [Round Trip Authentication](https://www.red5pro.com/docs/special/round-trip-auth/overview/).
 
