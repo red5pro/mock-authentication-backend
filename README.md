@@ -30,7 +30,7 @@ sudo npm install forever -g
 
 In the `nodejs-mock-service directory`, edit the `index.js` file. In the top rows of the file, locate the comment `BEGINNING OF CONFIGURATION`. After that, there will be two variables that need to be updated with your custom values:
 
-* `host`: The host where the NodeJS service is deployed. Replace "localhost" with the private IP address of the NodeJS server.
+* `host`: The host where the NodeJS service is deployed. Replace "localhost" with the public IP address of the NodeJS server.
 * `port`: The port that you opened for the service. Default example: 3000 (make sure this port is opened on your inbound firewall rules).
 
 There is also an optional value, `optionalURLResource`, which can be used to pass a URL to a connecting client.
@@ -45,13 +45,11 @@ npm install
 
 You can start the server with the command:
 
-`node index.js`
+`sudo node index.js &`
 
 or better yet,
 
-```sh
-forever start index.js
-```
+``sudo forever start index.js &`
 
 to view the log location and status of the running process, run `forever list`
 
