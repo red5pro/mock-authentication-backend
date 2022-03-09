@@ -49,7 +49,7 @@ You can start the server with the command:
 
 or better yet,
 
-``sudo forever start index.js &`
+`sudo forever start index.js &`
 
 to view the log location and status of the running process, run `forever list`
 
