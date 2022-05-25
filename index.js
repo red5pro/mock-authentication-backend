@@ -92,6 +92,15 @@ app.post('/invalidateCredentials', function(request, response){
 	
 });
 
+// capture general /webhook POSTs
+app.post('/webhook', function(request, response){
+
+    console.log('\n\nWebhook POST');
+    console.log(request.body);
+	
+	response.send({});
+});
+
 
 app.listen(port,host);
-
+console.log(`Server running on port ${port}`)
