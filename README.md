@@ -6,7 +6,9 @@ You can set up your validation server in any technology as long as you keep the 
 
 The steps below explain the various components of the NodeJS mock server and how to set it up to work with the `RoundTripAuthenticator`.
 
-This NodeJS service simulates the business application server's API. It has some exposed endpoints to validate and invalidate the username and password supplied. The mock service does not do any actual validation on the inputs that it receives, just that it is receiving something. This means, for example, that the usernames'/passwords' validity is not checked.
+This NodeJS service simulates the business application server's API. It has some exposed endpoints to validate and invalidate the username and password supplied. The mock service does not do any actual validation on the inputs that it receives, just that it is receiving something. This means, for example, that usernames/passwords validity are not checked.
+
+The server also includes a webhook endpoint that accepts POST requests. The endpoint can be used to test the webhooks reported by the `live` server side application and `cloudstorage` plugin when configured to do so. The endpoint is available at `http(s)://<hostname>/webhook`
 
 # Requirements
 
