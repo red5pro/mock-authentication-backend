@@ -6,9 +6,7 @@ You can set up your validation server in any technology as long as you keep the 
 
 The steps below explain the various components of the NodeJS mock server and how to set it up to work with the `RoundTripAuthenticator`.
 
-This NodeJS service simulates the business application server's API. It has some exposed endpoints to validate and invalidate the username and password supplied. The mock service does not do any actual validation on the inputs that it receives, just that it is receiving something. This means, for example, that usernames/passwords validity are not checked.
-
-
+This NodeJS service simulates the business application server's API. It has some exposed endpoints to validate and invalidate the username and password supplied. The mock service does not do any actual validation on the inputs that it receives, just that it is receiving something. This means, for example, that the usernames'/passwords' validity is not checked.
 
 # Requirements
 
@@ -20,7 +18,7 @@ curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
 sudo bash nodesource_setup.sh
 sudo apt-get install -y nodejs
 sudo apt-get install -y build-essential
-sudo npm install -y forever -g
+sudo apt-get install -y forever -g
 ```
 
 > This project was developed with the latest NodeJS & NPM as of the time of this writing (April 15th, 2021).
@@ -39,6 +37,36 @@ There is also an optional value, `optionalURLResource`, which can be used to pas
 
 ```sh
 npm install
+```
+
+# SSL
+
+For most NodeJS implementations, it is necessary to generate SSL certificate files, which are converted into .crt and .key files to be stored in the `<service>/cert` folder.
+
+## Using Let's Encrypt
+
+The following can be run to install Let's Encrypt Certbot on Ubuntu (`snap` is included with most Ubuntu distributions by default)
+
+1.	sudo snap install core; sudo snap refresh core
+2.	sudo snap install --classic certbot
+3.	sudo ln -s /snap/bin/certbot /usr/bin/certbot
+
+To generate the cert, run `sudo certbot certonly --standalone --email <your-email> --agree-tos -d <server-fqdn>`  (for example: `sudo certbot certonly --standalone --email jessica@infrared5.com --agree-tos -d test01.red5.net`)
+
+You will then need to copy the fullchain and privatekey to the cert directory of your application
+
+```sh
+sudo cp /etc/letsencrypt/live/<server-fqdn>/fullchain.pem ~/<nodejs-server>/cert/certificate.crt
+sudo cp /etc/letsencrypt/live/<server-fqdn>/privkey.pem ~/<nodejs-server>/cert/privateKey.key
+sudo chmod +r ~/<nodejs-server>/cert/*
+
+Your index.js file then needs to be modified with the full path to the certificate and privateKey files (replace with the appropriate paths):
+
+```js
+if (useSSL) {
+  cert = fs.readFileSync('/home/ubuntu/serverapp/cert/certificate.crt')
+  key = fs.readFileSync('/home/ubuntu/serverapp/cert/privateKey.key')
+  port = 443
 ```
 
 # How to run
