@@ -20,7 +20,7 @@ curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
 sudo bash nodesource_setup.sh
 sudo apt-get install -y nodejs
 sudo apt-get install -y build-essential
-sudo apt-get install -y forever -g
+sudo npm install forever -g
 ```
 
 > This project was developed with the latest NodeJS & NPM as of the time of this writing (April 15th, 2021).
