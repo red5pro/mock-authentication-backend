@@ -77,13 +77,11 @@ You can start the server with the command:
 
 `sudo node index.js &`
 
-to view the log location and status of the running process, run `forever list`
-
 > Running the above will start the server on the default port which is defined in index.js
 
 If you open in a browser `http://<host>:<port>` you will get a few forms to test the API. The server's console will output the values received. The browser will show you the responses from the node server.
 
-# Runing The Mock as a Service
+##  Running as a Service
 
 Copy the `mockauth.service` file (in this repository) to `/etc/systemd/system/`
 
@@ -117,8 +115,8 @@ Restart=always
 # Restart=on-failure
 
 # Output to syslog
-StandardOutput=syslog
-StandardError=syslog
+StandardOutput=journal
+StandardError=journal
 SyslogIdentifier=nodejs-mock-authentication
 
 # Variables
@@ -146,6 +144,14 @@ To stop the service, run:
 
 `sudo systemctl stop mockauth`
 
+To check the state of the mockauth service:
+
+`sudo systemctl status mockauth`
+
+Also, if you make any modifications to the service file after adding it, you will need to run:
+
+`sudo systemctl daemon-reload`
+
 # Logging
 
 Using the above service file, the logging will be included in the `/var/log/syslog` file, and will look like:
@@ -162,7 +168,7 @@ nodejs-mock-authentication[393833]: validate credentials called
 nodejs-mock-authentication[393833]: type: subscriber
 nodejs-mock-authentication[393833]: username: test
 nodejs-mock-authentication[393833]: password: test
-nodejs-mock-authentication[393833]: streamID: ssoinod
+nodejs-mock-authentication[393833]: streamID: stream2
 nodejs-mock-authentication[393833]: token: undefined
 nodejs-mock-authentication[393833]: invalid un/pw
 ```
