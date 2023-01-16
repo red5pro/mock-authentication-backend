@@ -1,0 +1,27 @@
+[Unit]
+Description=mockauth-service
+# Author: Red5 Pro
+
+[Service]
+# Start Service and Examples
+ExecStart=/usr/bin/node /home/ubuntu/mock-authentication-backend/index.js
+
+# Required on some systems
+WorkingDirectory=/home/ubuntu/mock-authentication-backend/
+
+
+# Restart service after 10 seconds if node service crashes
+RestartSec=10
+Restart=always
+# Restart=on-failure
+
+# Output to syslog
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nodejs-mock-authentication
+
+# Variables
+Environment=PATH=/usr/bin:/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target

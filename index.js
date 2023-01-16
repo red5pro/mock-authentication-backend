@@ -17,8 +17,8 @@ var app = express();
 /*
 *   HOST
 *
-*/
-var host = "104.236.193.72";
+*/replace "locahost" with your server url
+var host = "localhost";
 /*
 *   PORT
 *

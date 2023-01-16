@@ -12,25 +12,24 @@ The server also includes a webhook endpoint that accepts POST requests. The endp
 
 # Requirements
 
-* NodeJS v10+
+* NodeJS v19+
 * NPM 6+
 
 ```sh
-curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
+curl -sL https://deb.nodesource.com/setup_19.x -o nodesource_setup.sh
 sudo bash nodesource_setup.sh
 sudo apt-get install -y nodejs
 sudo apt-get install -y build-essential
-sudo npm install forever -g
 ```
 
-> This project was developed with the latest NodeJS & NPM as of the time of this writing (April 15th, 2021).
+> This project was updated with the latest NodeJS & NPM as of the time of this writing (January, 2023).
 
 
 # Configuration
 
 In the `nodejs-mock-service directory`, edit the `index.js` file. In the top rows of the file, locate the comment `BEGINNING OF CONFIGURATION`. After that, there will be two variables that need to be updated with your custom values:
 
-* `host`: The host where the NodeJS service is deployed. Replace "localhost" with the public IP address of the NodeJS server.
+* `host`: The host where the NodeJS service is deployed. Replace "localhost" with the private IP address of the NodeJS server *(note: if you are running on Digital Ocean, you need to use the public IP address)*.
 * `port`: The port that you opened for the service. Default example: 3000 (make sure this port is opened on your inbound firewall rules).
 
 There is also an optional value, `optionalURLResource`, which can be used to pass a URL to a connecting client.
@@ -61,6 +60,7 @@ You will then need to copy the fullchain and privatekey to the cert directory of
 sudo cp /etc/letsencrypt/live/<server-fqdn>/fullchain.pem ~/<nodejs-server>/cert/certificate.crt
 sudo cp /etc/letsencrypt/live/<server-fqdn>/privkey.pem ~/<nodejs-server>/cert/privateKey.key
 sudo chmod +r ~/<nodejs-server>/cert/*
+```
 
 Your index.js file then needs to be modified with the full path to the certificate and privateKey files (replace with the appropriate paths):
 
@@ -77,20 +77,93 @@ You can start the server with the command:
 
 `sudo node index.js &`
 
-or better yet,
-
-`sudo forever start index.js &`
-
 to view the log location and status of the running process, run `forever list`
 
 > Running the above will start the server on the default port which is defined in index.js
 
 If you open in a browser `http://<host>:<port>` you will get a few forms to test the API. The server's console will output the values received. The browser will show you the responses from the node server.
 
-## Forever Commands
+# Runing The Mock as a Service
 
-* `forever start`: starts a script as a daemon.
-* `forever stop`: stops the daemon script by `Id|Uid|Pid|Index|Script`.
-* `forever stopall`: stops all running scripts.
-* `forever restart`: restarts the daemon script.
-* `forever restartall`: restarts all running forever scripts.
+Copy the `mockauth.service` file (in this repository) to `/etc/systemd/system/`
+
+```sh
+sudo cp mockauth.service /etc/systemd/system/
+```
+
+The service file looks like the following: 
+
+```shell
+[Unit]
+Description=mockauth-service
+# Documentation=https://
+# Author: Red5 Pro
+
+[Service]
+# Start Service and Examples
+ExecStart=/usr/bin/node /home/ubuntu/mock-authentication-backend/index.js
+
+# Options Stop and Restart
+# ExecStop=
+# ExecReload=
+
+# Required on some systems
+WorkingDirectory=/home/ubuntu/mock-authentication-backend/
+
+
+# Restart service after 10 seconds if node service crashes
+RestartSec=10
+Restart=always
+# Restart=on-failure
+
+# Output to syslog
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=nodejs-mock-authentication
+
+# Variables
+Environment=PATH=/usr/bin:/usr/local/bin
+
+[Install]
+WantedBy=multi-user.target
+```
+
+**NOTE:** The `mockauth.service` file assumes that you are running this back-end from `/home/ubuntu/mock-authentication-backend`. If you are running from a different filepath, then you will need to modify the service file accordingly.
+
+Enable the service:
+
+`sudo systemctl enable mockauth.service`
+
+should return: `Created symlink /etc/systemd/system/multi-user.target.wants/mockauth.service → /etc/systemd/system/mockauth.service.`
+
+## Start/Stop the Mock Authentication Service
+
+To start the service, run:
+
+`sudo systemctl start mockauth`
+
+To stop the service, run:
+
+`sudo systemctl stop mockauth`
+
+# Logging
+
+Using the above service file, the logging will be included in the `/var/log/syslog` file, and will look like:
+
+```log
+ nodejs-mock-authentication[393833]: validate credentials called
+nodejs-mock-authentication[393833]: type: publisher
+nodejs-mock-authentication[393833]: username: user
+nodejs-mock-authentication[393833]: password: pass
+nodejs-mock-authentication[393833]: streamID: stream2
+nodejs-mock-authentication[393833]: token: undefined
+nodejs-mock-authentication[393833]: valid un/pw
+nodejs-mock-authentication[393833]: validate credentials called
+nodejs-mock-authentication[393833]: type: subscriber
+nodejs-mock-authentication[393833]: username: test
+nodejs-mock-authentication[393833]: password: test
+nodejs-mock-authentication[393833]: streamID: ssoinod
+nodejs-mock-authentication[393833]: token: undefined
+nodejs-mock-authentication[393833]: invalid un/pw
+```
+
