@@ -1,0 +1,26 @@
+[Unit]
+Description=Mock RoundTrip Authentication Backend for Red5 Pro
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/mock-auth/server.py
+WorkingDirectory=/opt/mock-auth
+
+Environment=MOCK_AUTH_HOST=0.0.0.0
+Environment=MOCK_AUTH_PORT=3000
+Environment=MOCK_AUTH_LOG_DIR=/var/log/mock-auth
+Environment=MOCK_AUTH_LOG_LEVEL=INFO
+
+Restart=always
+RestartSec=10
+
+StandardOutput=journal
+StandardError=journal
+
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/var/log/mock-auth
+
+[Install]
+WantedBy=multi-user.target
