@@ -1,6 +1,6 @@
 # mock-authentication-backend
 
-This NodeJS Mock Authentication Service is for use in testing Red5 Pro [Round Trip Authentication](https://www.red5pro.com/docs/special/round-trip-auth/overview/).
+This NodeJS Mock Authentication Service is for use in testing Red5 Pro [Round Trip Authentication](https://www.red5.net/docs/red5-pro/users-guide/authentication/round-trip-authentication/).
 
 You can set up your validation server in any technology as long as you keep the endpoints and `response JSON` format the same. You can use the provided code as a starting point for your own auth server as a NodeJS service.
 
