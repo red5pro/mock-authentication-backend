@@ -94,3 +94,7 @@ If you open in a browser `http://<host>:<port>` you will get a few forms to test
 * `forever stopall`: stops all running scripts.
 * `forever restart`: restarts the daemon script.
 * `forever restartall`: restarts all running forever scripts.
+
+## Red5 AI Skills
+
+Use the **Red5 AI skills** to help your AI coding assistant build real-time video applications with Red5 Pro and Red5 Cloud, with guidance grounded in Red5 documentation. [Download the skill from GitHub](https://github.com/red5pro/red5pro-skills) or install it by running `npx red5pro-skills` in your terminal.
